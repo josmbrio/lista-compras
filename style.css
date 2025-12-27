@@ -43,21 +43,21 @@ input, select, button {
 .checkbox {
   width: 22px;
   height: 22px;
-  border: 2px solid red;
+  border: 2px solid green;
   cursor: pointer;
 }
 
 .checkbox.checked {
-  background: green;
-  border-color: green;
+  background: red;
+  border-color: red;
 }
 
 .product-name.red {
-  color: red;
+  color: black;
 }
 
 .product-name.green {
-  color: green;
+  color: black;
 }
 
 textarea {
@@ -65,4 +65,16 @@ textarea {
   min-height: 80px;
   font-size: 16px;
   padding: 8px;
+}
+
+.delete-btn {
+  margin-left: auto;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 6px;
+  color: #999;
+}
+
+.delete-btn:hover {
+  color: red;
 }
