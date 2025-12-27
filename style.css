@@ -1,0 +1,61 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  padding: 15px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+input, select, button {
+  padding: 8px;
+  font-size: 16px;
+}
+
+.category {
+  background: #fff;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid red;
+  cursor: pointer;
+}
+
+.checkbox.checked {
+  background: green;
+  border-color: green;
+}
+
+.product-name.red {
+  color: red;
+}
+
+.product-name.green {
+  color: green;
+}
