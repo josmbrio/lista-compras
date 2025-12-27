@@ -17,7 +17,7 @@ function save() {
 
 function onCategoryChange() {
   selectedCategoryIndex =
-    document.getElementById("categorySelect").value;
+    Number(document.getElementById("categorySelect").value);
 }
 
 function render() {
@@ -26,6 +26,11 @@ function render() {
 
   list.innerHTML = "";
   select.innerHTML = "";
+
+  if (data.length === 0) {
+    save();
+    return;
+  }
 
   data.forEach((cat, ci) => {
     select.innerHTML += `<option value="${ci}">${cat.name}</option>`;
@@ -43,21 +48,17 @@ function render() {
     `;
 
     cat.products.forEach((p, pi) => {
-      const checked = p.needed; // TRUE = CHECK = ROJO
+      const checked = p.needed;
 
       html += `
         <div class="product">
           <div class="checkbox ${checked ? "checked" : ""}"
                onclick="toggle(${ci},${pi})"></div>
 
-          <div class="product-name">
-            ${p.name}
-          </div>
+          <div class="product-name">${p.name}</div>
 
           <div class="delete-btn"
-               onclick="deleteProduct(${ci},${pi})">
-            ✖️
-          </div>
+               onclick="deleteProduct(${ci},${pi})">✖️</div>
         </div>
       `;
     });
@@ -66,9 +67,7 @@ function render() {
     list.innerHTML += html;
   });
 
-  // 🔑 restaurar selección
   select.value = selectedCategoryIndex;
-
   save();
 }
 
@@ -94,10 +93,11 @@ function addCategory() {
   render();
 }
 
-// 📋 PEGAR DESDE PORTAPAPELES
+// 📋 PEGAR PRODUCTOS
 function addProducts() {
+  if (!data[selectedCategoryIndex]) return;
+
   const textarea = document.getElementById("pasteInput");
-  const ci = selectedCategoryIndex;
 
   const lines = textarea.value
     .split("\n")
@@ -105,7 +105,7 @@ function addProducts() {
     .filter(l => l.length > 0);
 
   lines.forEach(line => {
-    data[ci].products.push({
+    data[selectedCategoryIndex].products.push({
       name: line,
       needed: true
     });
@@ -117,7 +117,9 @@ function addProducts() {
 
 // 🔤 ORDEN A–Z
 function sortAZ(ci) {
-  if (!confirm(`¿Ordenar alfabéticamente la categoría "${data[ci].name}"?`)) return;
+  if (!confirm(`¿Ordenar alfabéticamente la categoría "${data[ci].name}"?`))
+    return;
+
   data[ci].products.sort((a, b) =>
     a.name.localeCompare(b.name, "es", { sensitivity: "base" })
   );
@@ -126,7 +128,12 @@ function sortAZ(ci) {
 
 // ❌ ELIMINAR PRODUCTO
 function deleteProduct(ci, pi) {
-  if (!confirm(`¿Desea eliminar el producto "${data[ci].products[pi].name}"?`)) return;
+  if (
+    !confirm(
+      `¿Desea eliminar el producto "${data[ci].products[pi].name}"?`
+    )
+  ) return;
+
   data[ci].products.splice(pi, 1);
   render();
 }
@@ -137,22 +144,15 @@ function deleteCategory(ci) {
     !confirm(
       `¿Eliminar la categoría "${data[ci].name}" y todos sus productos?`
     )
-  )
-    return;
+  ) return;
 
   data.splice(ci, 1);
 
-  if (selectedCategoryIndex >= data.length) {
-    selectedCategoryIndex = data.length - 1;
-  }
-  if (selectedCategoryIndex < 0) {
-    selectedCategoryIndex = 0;
-  }
+  selectedCategoryIndex =
+    Math.max(0, Math.min(selectedCategoryIndex, data.length - 1));
 
   render();
 }
-
-render();
 
 // 📤 EXPORTAR
 function exportData() {
@@ -177,7 +177,7 @@ function importData(event) {
 
   const reader = new FileReader();
 
-  reader.onload = function (e) {
+  reader.onload = e => {
     try {
       const importedData = JSON.parse(e.target.result);
 
@@ -198,7 +198,12 @@ function importData(event) {
     } catch {
       alert("Error al leer el archivo");
     }
+
+    // 🔑 permitir importar el mismo archivo otra vez
+    event.target.value = "";
   };
 
   reader.readAsText(file);
 }
+
+render();
