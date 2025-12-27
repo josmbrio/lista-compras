@@ -3,32 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
   <title>Lista de Compras</title>
 
-  <link rel="stylesheet" href="style.css">
+  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
-
   <meta name="theme-color" content="#ffffff">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>🛒 Lista de Compras</h1>
+  <h1>🛒 Lista de Compras</h1>
 
-<div class="controls">
-  <input id="categoryInput" placeholder="Nueva categoría">
-  <button onclick="addCategory()">Agregar</button>
-</div>
+  <!-- Agregar categoría -->
+  <div class="controls">
+    <input
+      id="categoryInput"
+      type="text"
+      placeholder="Nueva categoría"
+    >
+    <button onclick="addCategory()">Agregar</button>
+  </div>
 
-<div class="controls">
-  <input id="productInput" placeholder="Nuevo producto">
-  <select id="categorySelect"></select>
-  <button onclick="addProduct()">Agregar</button>
-</div>
+  <!-- Agregar producto -->
+  <div class="controls">
+    <input
+      id="productInput"
+      type="text"
+      placeholder="Nuevo producto"
+    >
 
-<div id="list"></div>
+    <select id="categorySelect"></select>
 
-<script src="app.js"></script>
+    <button onclick="addProduct()">Agregar</button>
+  </div>
+
+  <!-- Pegar productos desde portapapeles -->
+  <div class="controls">
+    <textarea
+      id="pasteInput"
+      placeholder="Pega aquí productos (uno por línea)"
+    ></textarea>
+
+    <button onclick="pasteProducts()">Pegar</button>
+  </div>
+
+  <!-- Lista -->
+  <div id="list"></div>
+
+  <!-- Script principal -->
+  <script src="app.js"></script>
+
+  <!-- Service Worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+
 </body>
 </html>
