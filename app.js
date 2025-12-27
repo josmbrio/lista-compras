@@ -37,7 +37,7 @@ function render() {
           <div>
             <button onclick="sortAZ(${ci})">A–Z</button>
             <span class="delete-category"
-                  onclick="deleteCategory(${ci})">❌</span>
+                  onclick="deleteCategory(${ci})">✖️</span>
           </div>
         </div>
     `;
@@ -56,7 +56,7 @@ function render() {
 
           <div class="delete-btn"
                onclick="deleteProduct(${ci},${pi})">
-            ❌
+            ✖️
           </div>
         </div>
       `;
@@ -94,24 +94,8 @@ function addCategory() {
   render();
 }
 
-// ➕ Producto individual
-function addProduct() {
-  const input = document.getElementById("productInput");
-  const ci = selectedCategoryIndex;
-
-  if (!input.value.trim()) return;
-
-  data[ci].products.push({
-    name: input.value.trim(),
-    needed: true
-  });
-
-  input.value = "";
-  render();
-}
-
 // 📋 PEGAR DESDE PORTAPAPELES
-function pasteProducts() {
+function addProducts() {
   const textarea = document.getElementById("pasteInput");
   const ci = selectedCategoryIndex;
 
@@ -133,6 +117,7 @@ function pasteProducts() {
 
 // 🔤 ORDEN A–Z
 function sortAZ(ci) {
+  if (!confirm(`¿Ordenar alfabéticamente la categoría "${data[ci].name}"?`)) return;
   data[ci].products.sort((a, b) =>
     a.name.localeCompare(b.name, "es", { sensitivity: "base" })
   );
@@ -141,7 +126,7 @@ function sortAZ(ci) {
 
 // ❌ ELIMINAR PRODUCTO
 function deleteProduct(ci, pi) {
-  if (!confirm("¿Eliminar este producto?")) return;
+  if (!confirm(`¿Desea eliminar el producto "${data[ci].products[pi].name}"?`)) return;
   data[ci].products.splice(pi, 1);
   render();
 }

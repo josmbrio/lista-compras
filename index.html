@@ -35,18 +35,12 @@
     <button onclick="addCategory()">Agregar</button>
   </div>
 
-  <!-- Agregar producto -->
-  <div class="controls">
-    <input id="productInput" type="text" placeholder="Nuevo producto">
-    <select id="categorySelect" onchange="onCategoryChange()"></select>
-    <button onclick="addProduct()">Agregar</button>
-  </div>
-
   <!-- Pegar productos -->
   <div class="controls">
     <textarea id="pasteInput"
       placeholder="Pega aquí productos (uno por línea)"></textarea>
-    <button onclick="pasteProducts()">Pegar</button>
+    <select id="categorySelect" onchange="onCategoryChange()"></select>
+    <button onclick="addProducts()">Agregar</button>
   </div>
 
   <!-- Exportar / Importar -->
