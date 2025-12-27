@@ -1,28 +1,36 @@
+let selectedCategoryIndex = 0;
+
 let data = JSON.parse(localStorage.getItem("shoppingData")) || [
-    {
-        name: "Proteínas",
-        products: [
-            { name: "Pescado", needed: true },
-            { name: "Pollo", needed: true },
-            { name: "Pavo", needed: true }
-        ]
-    }
+  {
+    name: "Proteínas",
+    products: [
+      { name: "Pescado", needed: true },
+      { name: "Pollo", needed: true },
+      { name: "Pavo", needed: true }
+    ]
+  }
 ];
 
 function save() {
-    localStorage.setItem("shoppingData", JSON.stringify(data));
+  localStorage.setItem("shoppingData", JSON.stringify(data));
+}
+
+function onCategoryChange() {
+  selectedCategoryIndex =
+    document.getElementById("categorySelect").value;
 }
 
 function render() {
-    const list = document.getElementById("list");
-    const select = document.getElementById("categorySelect");
-    list.innerHTML = "";
-    select.innerHTML = "";
+  const list = document.getElementById("list");
+  const select = document.getElementById("categorySelect");
 
-    data.forEach((cat, ci) => {
-        select.innerHTML += `<option value="${ci}">${cat.name}</option>`;
+  list.innerHTML = "";
+  select.innerHTML = "";
 
-        let html = `
+  data.forEach((cat, ci) => {
+    select.innerHTML += `<option value="${ci}">${cat.name}</option>`;
+
+    let html = `
       <div class="category">
         <div class="category-header">
           <strong>${cat.name}</strong>
@@ -30,95 +38,104 @@ function render() {
         </div>
     `;
 
-        cat.products.forEach((p, pi) => {
-            const checked = p.needed; // TRUE = CHECK = ROJO
+    cat.products.forEach((p, pi) => {
+      const checked = p.needed; // TRUE = CHECK = ROJO
 
-            html += `
-  <div class="product">
-    <div class="checkbox ${checked ? "checked" : ""}"
-         onclick="toggle(${ci},${pi})"></div>
+      html += `
+        <div class="product">
+          <div class="checkbox ${checked ? "checked" : ""}"
+               onclick="toggle(${ci},${pi})"></div>
 
-    <div class="product-name ${checked ? "red" : "green"}">
-      ${p.name}
-    </div>
+          <div class="product-name">
+            ${p.name}
+          </div>
 
-    <div class="delete-btn"
-         onclick="deleteProduct(${ci},${pi})">
-      ❌
-    </div>
-  </div>
-`;
-
-        });
-
-        html += "</div>";
-        list.innerHTML += html;
+          <div class="delete-btn"
+               onclick="deleteProduct(${ci},${pi})">
+            ❌
+          </div>
+        </div>
+      `;
     });
 
-    save();
+    html += "</div>";
+    list.innerHTML += html;
+  });
+
+  // 🔑 restaurar selección
+  select.value = selectedCategoryIndex;
+
+  save();
 }
 
 // 🔄 Toggle estado
 function toggle(ci, pi) {
-    data[ci].products[pi].needed = !data[ci].products[pi].needed;
-    render();
+  data[ci].products[pi].needed =
+    !data[ci].products[pi].needed;
+  render();
 }
 
 // ➕ Categoría
 function addCategory() {
-    const input = document.getElementById("categoryInput");
-    if (!input.value.trim()) return;
+  const input = document.getElementById("categoryInput");
+  if (!input.value.trim()) return;
 
-    data.push({ name: input.value.trim(), products: [] });
-    input.value = "";
-    render();
+  data.push({
+    name: input.value.trim(),
+    products: []
+  });
+
+  selectedCategoryIndex = data.length - 1;
+  input.value = "";
+  render();
 }
 
 // ➕ Producto individual
 function addProduct() {
-    const input = document.getElementById("productInput");
-    const ci = document.getElementById("categorySelect").value;
+  const input = document.getElementById("productInput");
+  const ci = selectedCategoryIndex;
 
-    if (!input.value.trim()) return;
+  if (!input.value.trim()) return;
 
-    data[ci].products.push({
-        name: input.value.trim(),
-        needed: true // SIEMPRE entra en CHECK (ROJO)
-    });
+  data[ci].products.push({
+    name: input.value.trim(),
+    needed: true
+  });
 
-    input.value = "";
-    render();
+  input.value = "";
+  render();
 }
 
 // 📋 PEGAR DESDE PORTAPAPELES
 function pasteProducts() {
-    const textarea = document.getElementById("pasteInput");
-    const ci = document.getElementById("categorySelect").value;
+  const textarea = document.getElementById("pasteInput");
+  const ci = selectedCategoryIndex;
 
-    const lines = textarea.value
-        .split("\n")
-        .map(l => l.trim())
-        .filter(l => l.length > 0);
+  const lines = textarea.value
+    .split("\n")
+    .map(l => l.trim())
+    .filter(l => l.length > 0);
 
-    lines.forEach(line => {
-        data[ci].products.push({
-            name: line,
-            needed: true // CHECK ROJO
-        });
+  lines.forEach(line => {
+    data[ci].products.push({
+      name: line,
+      needed: true
     });
+  });
 
-    textarea.value = "";
-    render();
+  textarea.value = "";
+  render();
 }
 
 // 🔤 ORDEN A–Z
 function sortAZ(ci) {
-    data[ci].products.sort((a, b) =>
-        a.name.localeCompare(b.name, "es", { sensitivity: "base" })
-    );
-    render();
+  data[ci].products.sort((a, b) =>
+    a.name.localeCompare("es", { sensitivity: "base" })
+  );
+  render();
 }
 
+// ❌ ELIMINAR PRODUCTO
 function deleteProduct(ci, pi) {
   if (!confirm("¿Eliminar este producto?")) return;
   data[ci].products.splice(pi, 1);
