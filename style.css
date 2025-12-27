@@ -89,3 +89,7 @@ textarea {
 .delete-category:hover {
   color: red;
 }
+
+#importFile {
+  display: none;
+}

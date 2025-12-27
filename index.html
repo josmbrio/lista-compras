@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="style.css?v=2.2">
+  <link rel="stylesheet" href="style.css?v=2.3">
 </head>
 <body>
 
@@ -21,42 +21,43 @@
 
   <!-- Agregar categoría -->
   <div class="controls">
-    <input
-      id="categoryInput"
-      type="text"
-      placeholder="Nueva categoría"
-    >
+    <input id="categoryInput" type="text" placeholder="Nueva categoría">
     <button onclick="addCategory()">Agregar</button>
   </div>
 
   <!-- Agregar producto -->
   <div class="controls">
-    <input
-      id="productInput"
-      type="text"
-      placeholder="Nuevo producto"
-    >
-
+    <input id="productInput" type="text" placeholder="Nuevo producto">
     <select id="categorySelect" onchange="onCategoryChange()"></select>
-
     <button onclick="addProduct()">Agregar</button>
   </div>
 
-  <!-- Pegar productos desde portapapeles -->
+  <!-- Pegar productos -->
   <div class="controls">
-    <textarea
-      id="pasteInput"
-      placeholder="Pega aquí productos (uno por línea)"
-    ></textarea>
-
+    <textarea id="pasteInput"
+      placeholder="Pega aquí productos (uno por línea)"></textarea>
     <button onclick="pasteProducts()">Pegar</button>
+  </div>
+
+  <!-- Exportar / Importar -->
+  <div class="controls">
+    <button onclick="exportData()">📤 Exportar</button>
+    <button onclick="document.getElementById('importFile').click()">
+      📥 Importar
+    </button>
+    <input
+      type="file"
+      id="importFile"
+      accept=".json"
+      onchange="importData(event)"
+    >
   </div>
 
   <!-- Lista -->
   <div id="list"></div>
 
-  <!-- Script principal -->
-  <script src="app.js?v=2.2"></script>
+  <!-- Script -->
+  <script src="app.js?v=2.3"></script>
 
   <!-- Service Worker -->
   <script>
