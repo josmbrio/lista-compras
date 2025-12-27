@@ -34,7 +34,11 @@ function render() {
       <div class="category">
         <div class="category-header">
           <strong>${cat.name}</strong>
-          <button onclick="sortAZ(${ci})">A–Z</button>
+          <div>
+            <button onclick="sortAZ(${ci})">A–Z</button>
+            <span class="delete-category"
+                  onclick="deleteCategory(${ci})">❌</span>
+          </div>
         </div>
     `;
 
@@ -130,7 +134,7 @@ function pasteProducts() {
 // 🔤 ORDEN A–Z
 function sortAZ(ci) {
   data[ci].products.sort((a, b) =>
-    a.name.localeCompare("es", { sensitivity: "base" })
+    a.name.localeCompare(b.name, "es", { sensitivity: "base" })
   );
   render();
 }
@@ -139,6 +143,27 @@ function sortAZ(ci) {
 function deleteProduct(ci, pi) {
   if (!confirm("¿Eliminar este producto?")) return;
   data[ci].products.splice(pi, 1);
+  render();
+}
+
+// ❌ ELIMINAR CATEGORÍA
+function deleteCategory(ci) {
+  if (
+    !confirm(
+      `¿Eliminar la categoría "${data[ci].name}" y todos sus productos?`
+    )
+  )
+    return;
+
+  data.splice(ci, 1);
+
+  if (selectedCategoryIndex >= data.length) {
+    selectedCategoryIndex = data.length - 1;
+  }
+  if (selectedCategoryIndex < 0) {
+    selectedCategoryIndex = 0;
+  }
+
   render();
 }
 
