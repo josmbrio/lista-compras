@@ -154,7 +154,7 @@ function deleteCategory(ci) {
   render();
 }
 
-// 📤 EXPORTAR
+// 📤 EXPORTAR GLOBAL (JSON)
 function exportData() {
   const blob = new Blob(
     [JSON.stringify(data, null, 2)],
@@ -165,6 +165,54 @@ function exportData() {
   const a = document.createElement("a");
   a.href = url;
   a.download = "lista-compras.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+// 📤 EXPORTAR SELECCIONADOS DE UNA CATEGORÍA (TXT)
+function exportSelected() {
+  if (data.length === 0) {
+    alert("No hay categorías para exportar");
+    return;
+  }
+
+  const categoryNames = data.map(cat => cat.name);
+  const options = categoryNames
+    .map((name, index) => `${index + 1}. ${name}`)
+    .join("\n");
+
+  const choice = prompt(
+    `¿Qué categoría deseas exportar?\n\n${options}\n\nEscribe el número:`,
+    "1"
+  );
+
+  if (!choice) return;
+
+  const categoryIndex = Number(choice) - 1;
+
+  if (categoryIndex < 0 || categoryIndex >= data.length) {
+    alert("Número de categoría inválido");
+    return;
+  }
+
+  const category = data[categoryIndex];
+  const selectedProducts = category.products
+    .filter(p => p.needed)
+    .map(p => p.name);
+
+  if (selectedProducts.length === 0) {
+    alert(`No hay elementos seleccionados en "${category.name}"`);
+    return;
+  }
+
+  const text = selectedProducts.join("\n");
+  const blob = new Blob([text], { type: "text/plain" });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${category.name}.txt`;
   a.click();
 
   URL.revokeObjectURL(url);
